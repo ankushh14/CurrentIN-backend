@@ -17,7 +17,6 @@ app.post("/currency_conv",async(req,res)=>{
     await fetch(`https://api.twelvedata.com/currency_conversion?symbol=${basesymbol}/${anssymbol}&amount=${amount}&apikey=${apikey}`).then(r=>{
         r.json().then(data=>{
             res.send(data);
-            console.log(data);
         })
     })
 });
