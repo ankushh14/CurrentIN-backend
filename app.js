@@ -8,7 +8,13 @@ app.use(cors());
 app.use(express.json());
 dotenv.config();
 
+const options = {
+    headers: {
+      'x-access-token': process.env.COIN_API_KEY,
+    },
+  };
 
+try{
 app.post("/currency_conv",async(req,res)=>{
     const basesymbol = req.body.basesymbol;
     const anssymbol = req.body.anssymbol;
@@ -20,6 +26,40 @@ app.post("/currency_conv",async(req,res)=>{
         })
     })
 });
+}catch(e){
+    console.log(e.message)
+}
+
+try{
+app.get('/coinprice',async(req,res)=>{
+    const page = req.query.page;
+    let offset = 0;
+    if(page == 0){
+        offset = Math.floor(8*page);
+    }else{
+     offset = Math.floor(8*page+1);
+    }
+    console.log(offset)
+    const response = await fetch(`https://api.coinranking.com/v2/coins?orderBy=price&limit=8&offset=${offset}`,options)
+    if(response.status === 200){
+    const resdata = await response.json();
+    const responsearray =  await resdata.data.coins.map(r=>{
+        return{
+            naming:r.name,
+            symbol:r.symbol,
+            logo:r.iconUrl,
+            price:r.price,
+        }
+    })
+    res.send(responsearray);
+}else{
+    console.log(response.status)
+    console.log("error aagaya")
+}
+})
+}catch(e){
+    console.log(e.message)
+}
 
 app.listen(process.env.PORT,()=>{
     console.log("listening");
