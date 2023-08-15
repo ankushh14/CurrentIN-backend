@@ -8,11 +8,6 @@ app.use(cors());
 app.use(express.json());
 dotenv.config();
 
-const options = {
-    headers: {
-      'x-access-token': process.env.COIN_API_KEY,
-    },
-  };
 
 try{
 app.post("/currency_conv",async(req,res)=>{
@@ -39,8 +34,7 @@ app.get('/coinprice',async(req,res)=>{
     }else{
      offset = Math.floor(8*page+1);
     }
-    console.log(offset)
-    const response = await fetch(`https://api.coinranking.com/v2/coins?orderBy=price&limit=8&offset=${offset}`,options)
+    const response = await fetch(`https://api.coinranking.com/v2/coins?orderBy=price&limit=8&offset=${offset}`)
     if(response.status === 200){
     const resdata = await response.json();
     const responsearray =  await resdata.data.coins.map(r=>{
