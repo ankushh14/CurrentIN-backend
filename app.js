@@ -28,7 +28,9 @@ fetchData=async()=>{
 }
 fetchData();
 
-
+app.get("/",(req,res)=>{
+    res.send("Hello")
+})
 
 
 try{
