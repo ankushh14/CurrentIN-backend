@@ -47,8 +47,9 @@ app.post("/currency_conv",async(req,res)=>{
     console.log(e.message)
 }
 
-try{
+
 app.get('/coinprice',async(req,res)=>{
+    try{
     const page = req.query.page;
     let offset = 0;
     if(page == 0){
@@ -57,11 +58,14 @@ app.get('/coinprice',async(req,res)=>{
      offset = Math.floor(8*page+1);
     }
     res.send(responsearray.slice(offset,offset+8));
-})
 }catch(e){
-    console.log(e.message)
+    res.status(500).send(e.message)
 }
+})
+
 
 app.listen(process.env.PORT,()=>{
     console.log("listening");
 });
+
+module.exports = app;
