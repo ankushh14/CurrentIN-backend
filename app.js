@@ -27,8 +27,7 @@ fetchData=async()=>{
     }
 }
 fetchData();
-const interval = 4*60*60*1000;
-setInterval(fetchData, interval);
+
 
 
 
