@@ -2,12 +2,27 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
-
-
 app.use(cors());
 app.use(express.json());
 dotenv.config();
-
+var resdata = [];
+var responsearray = [];
+fetchData=async()=>{
+    const response = await fetch(`https://api.coinranking.com/v2/coins?orderBy=price&limit=400`)
+    if(response.status === 200){
+    resdata = [];    
+    resdata = await response.json();
+    responsearray =  await resdata.data.coins.map(r=>{
+        return{
+            naming:r.name,
+            symbol:r.symbol,
+            logo:r.iconUrl,
+            price:r.price,
+        }
+    })
+    }
+}
+fetchData();
 
 app.get("/",(req,res)=>{
     res.send("Hello")
@@ -15,6 +30,7 @@ app.get("/",(req,res)=>{
 
 
 try{
+  
 app.post("/currency_conv",async(req,res)=>{
     const basesymbol = req.body.basesymbol;
     const anssymbol = req.body.anssymbol;
@@ -29,8 +45,6 @@ app.post("/currency_conv",async(req,res)=>{
 }catch(e){
     console.log(e.message)
 }
-
-
 app.get('/coinprice',async(req,res)=>{
     try{
     const page = req.query.page;
@@ -40,31 +54,12 @@ app.get('/coinprice',async(req,res)=>{
     }else{
      offset = Math.floor(8*page+1);
     }
-    const response = await fetch(`https://api.coinranking.com/v2/coins?orderBy=price&limit=8&offset=${offset}`)
-    if(response.status === 200){   
-    const resdata = await response.json();
-    const responsearray =  await resdata.data.coins.map(r=>{
-        return{
-            naming:r.name,
-            symbol:r.symbol,
-            logo:r.iconUrl,
-            price:r.price,
-        }
-    })
-    res.send(responsearray);
-    }
-    else{
-        res.send("error")
-    }
-    
+    res.send(responsearray.slice(offset,offset+8));
 }catch(e){
     res.status(500).send(e.message)
 }
 })
-
-
 app.listen(process.env.PORT,()=>{
     console.log("listening");
 });
-
 module.exports = app;
