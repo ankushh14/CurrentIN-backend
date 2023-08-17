@@ -25,9 +25,9 @@ const fetchData=async()=>{
     }
 };
 
-fetchData();
-app.get("/",(req,res)=>{
-    
+
+app.get("/",async(req,res)=>{
+    await fetchData();
     res.send("Hello")
 })
 
