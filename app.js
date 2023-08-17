@@ -5,8 +5,10 @@ const dotenv = require("dotenv");
 app.use(cors());
 app.use(express.json());
 dotenv.config();
+
 var resdata = [];
 var responsearray = [];
+
 const fetchData=async()=>{
     const response = await fetch(`https://api.coinranking.com/v2/coins?orderBy=price&limit=400`)
     if(response.status === 200){
@@ -21,11 +23,11 @@ const fetchData=async()=>{
         }
     })
     }
-}
+};
 
-
+fetchData();
 app.get("/",(req,res)=>{
-    fetchData();
+    
     res.send("Hello")
 })
 
