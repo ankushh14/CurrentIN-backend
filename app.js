@@ -7,7 +7,7 @@ app.use(express.json());
 dotenv.config();
 var resdata = [];
 var responsearray = [];
-fetchData=async()=>{
+const fetchData=async()=>{
     const response = await fetch(`https://api.coinranking.com/v2/coins?orderBy=price&limit=400`)
     if(response.status === 200){
     resdata = [];    
@@ -22,9 +22,10 @@ fetchData=async()=>{
     })
     }
 }
-fetchData();
+
 
 app.get("/",(req,res)=>{
+    fetchData();
     res.send("Hello")
 })
 
